@@ -40,3 +40,12 @@ Falta de durabilidade, já que após a confirmação, o dado não deveria mais s
 Consistência sendo aplicada, se a regra proíbe saldos negativos, a operação foi corretamente rejeitada para manter a regra como verdadeira.
 
 ---
+
+# Q5. Um SGBD trata dos seguintes aspectos: recuperação, integridade, redundância e inconsistência. Explique cada um deles e descreva como o SGBD os gerencia.
+
+* **Recuperação** é a capacidade do sistema de se recuperar após alguma falha, voltando o banco à um estado consistente e seguro, com todas as operações confirmadas salvas e nenhuma das operações que estavam em andamento pela metade (atomicidade). Ele faz isso por meio de vários logs a cada operação, esse log fala até onde todos os dados estão seguros e funcionais, e a partir de que ponto dados falhos começaram a aparecer devido ao problema, então ele salva o que está bom, e desfaz o que não está.
+* **Integridade** se refere aos dados salvos no banco e se o mesmo segue o padrão esperado. Por meio de diversas restrições e regras de funcionamento, os campos seguem esse padrão e se mantém corretos para o uso e leitura dos dados. O banco checa isso por meio de diversos constraints, como chaves primárias únicas, chaves estrangeiras e verificação de domínios.
+* **Redundância** trata-se de lidar com dados repetidos ao longo do sistema. Por se tratar uma organização de relações, os dados não precisam se repetir diversas vezes em lugares diferentes, basta criar uma nova relação onde o uso é requisitado. Há casos que a redundância não é ruim, como manter um banco de pé em diferentes servidores por segurança, e em casos como esse, os SGBDs garantem que os dados repetidos estejam todos sincronizados e a par uns com os outros.
+* **Inconsistência** lida com um dado repetido, mas diferente. Geralmente vem de um caso de redundância não proposital, há duas versões do mesmo dado em lugares diferentes do sistema, e a leitura acaba sendo confusa. O sistema lida com isso por meio das restrições anteriormente sitadas, previnindo que esses dados cheguem até mesmo a existir, mas também por meio da normalização de dados.
+
+---

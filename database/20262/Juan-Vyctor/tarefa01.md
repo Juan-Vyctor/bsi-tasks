@@ -1,4 +1,4 @@
-# Q1. Descreva o que é um Banco de Dados e o que é um Sistema Gerenciador de Banco de Dados. Cite exemplos de Bancos de Dados e seus SGBDs.
+Q1. Descreva o que é um Banco de Dados e o que é um Sistema Gerenciador de Banco de Dados. Cite exemplos de Bancos de Dados e seus SGBDs.
 
 Um banco de dados é uma forma de armazenar dados diferentes do gerenciador de arquivos. Ele não se baseia em hierarquia como o explorador e tem diversas funções a mais, como possibilidade de haver backups; ser capaz de fazer buscas por um dado específico dentro de sua base, assim como alterações, inserções e remoções em qualquer lugar; todos os dados se enxergam ao mesmo tempo, interagindo e conversando entre si; é capaz de facilmente lidar com de redundâncias e dados faltantes; por possibilitar dar permissões ao usuários, quem pode acessar que parte do banco, ele é extremamente seguro e confiável.
 
@@ -12,9 +12,31 @@ Em grande escala, o fato da organização ser hierarquica pode tornar o processo
 
 ---
 
-# Q3. Explique as propriedades **ACID**: atomicidade, consistência, isolamento e durabilidade. Para cada propriedade, descreva um exemplo prático no contexto de uma transferência bancária e explique o que aconteceria se o SGBD não garantisse essa propriedade.
+# Q3. Explique as propriedades ACID: atomicidade, consistência, isolamento e durabilidade. Para cada propriedade, descreva um exemplo prático no contexto de uma transferência bancária e explique o que aconteceria se o SGBD não garantisse essa propriedade.
 
 * **Atomicidade** se refere ao fato de que cada operação é "inteira", no sentido ser vista pelo sistema como uma única instrução, não a soma de pequenas partes, o que ajuda a lidar com erros. Um exemplo prático disso seria uma transferência PIX: na prática ocorrem duas etapas, descontar de quem enviou, e adicionar na de quem recebeu. O fato dessa operação ser atômica garante que se ouver um erro em qualquer etapa, toda a operação será cancelada, já que ela é "uma só". Caso isso não existisse, após o dinheiro ser removido da conta, poderia acontecer um erro, o segundo usuário não receberia seu dinheiro, e ele seria "perdido", causando inconsistências no banco e problemas no mundo real.
 * **Consistência** é o que garante que o banco de dados esteja sempre válido dentro de suas próprias regras, "consistente" com o que promete. Se um serviço bancário tem uma regra que proíbe saldos negativos, é impossível efetuar uma transferência dee R$50000 tendo apenas R$10 na conta. Se isso não existisse, muitas regras de negócio seriam desrespeitadas.
 * **Isolamento** faz com que transações concorrentes não interfiram indevidamente umas nas outras, mesmo sendo executadas ao mesmo tempo. Desse modo, o resultado final se torna o mesmo que o entregue por uma operação enfileirada, que executa em ordem. Um exemplo é se uma conta faz dois pagamentos de R$1000 ao mesmo tempo, tendo apenas R$1500 na conta, eles iniciciam ao mesmo tempo, mas o isolamento garante que apenas um deles seja efetuado, e o outro receba uma mensagem de "Saldo insuficiente", por exemplo.
 * **Durabilidade** assegura que após uma operação ter sido confirmada, ela fica permanentemente salva no banco, mesmo que um erro aconteça logo em seguida. Continuando o exemplo do PIX, a partir do momento que a a mensagem de "transferência bem sucedida" é enviada, tudo já foi devidamente salvo e registrado no banco de modo a não haver mais perigo de se perder.
+
+---
+
+# Q4. Para cada cenário abaixo, indique qual(is) propriedade(s) ACID está(ão) em jogo e justifique sua resposta:
+
+### a) Queda de energia no meio de uma transferência deixou o valor debitado da conta de origem, mas não creditado na conta de destino.
+
+Falta de atomicidade, a primeira etapa da operação foi efetuada (debitar) mas a segunda não. Caso a mesma tivesse sido implementada, ambas teriam sido canceladas.
+
+### b) Dois atendentes debitam, ao mesmo tempo, o mesmo saldo de uma conta.
+
+Isso é um caso de isolamento, já que duas operações distintas modificam uma mesma coisa ao mesmo tempo. Se ele foi aplicado corretamente ou não depende de como o sistema responde: se o saldo era suficiente e o sistema permitiu, o isolamento foi usado corretamente; se não era suficiente e mesmo assim a operação foi bem sucedida, então é uma falha.
+
+### c) O sistema confirma a operação, mas após reiniciar o servidor o dado foi perdido.
+
+Falta de durabilidade, já que após a confirmação, o dado não deveria mais ser perdido e sim estar permanantemente salvo no servidor.
+
+### d) Uma transferência que levaria o saldo abaixo do limite permitido é rejeitada pelo banco.
+
+Consistência sendo aplicada, se a regra proíbe saldos negativos, a operação foi corretamente rejeitada para manter a regra como verdadeira.
+
+---

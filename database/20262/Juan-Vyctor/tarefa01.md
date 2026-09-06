@@ -1,4 +1,4 @@
-Q1. Descreva o que é um Banco de Dados e o que é um Sistema Gerenciador de Banco de Dados. Cite exemplos de Bancos de Dados e seus SGBDs.
+# Q1. Descreva o que é um Banco de Dados e o que é um Sistema Gerenciador de Banco de Dados. Cite exemplos de Bancos de Dados e seus SGBDs.
 
 Um banco de dados é uma forma de armazenar dados diferentes do gerenciador de arquivos. Ele não se baseia em hierarquia como o explorador e tem diversas funções a mais, como possibilidade de haver backups; ser capaz de fazer buscas por um dado específico dentro de sua base, assim como alterações, inserções e remoções em qualquer lugar; todos os dados se enxergam ao mesmo tempo, interagindo e conversando entre si; é capaz de facilmente lidar com de redundâncias e dados faltantes; por possibilitar dar permissões ao usuários, quem pode acessar que parte do banco, ele é extremamente seguro e confiável.
 
@@ -49,3 +49,53 @@ Consistência sendo aplicada, se a regra proíbe saldos negativos, a operação 
 * **Inconsistência** lida com um dado repetido, mas diferente. Geralmente vem de um caso de redundância não proposital, há duas versões do mesmo dado em lugares diferentes do sistema, e a leitura acaba sendo confusa. O sistema lida com isso por meio das restrições anteriormente sitadas, previnindo que esses dados cheguem até mesmo a existir, mas também por meio da normalização de dados.
 
 ---
+
+
+
+# Q6. Considere o cenário de uma empresa de desenvolvimento de softwareque atende outras empresas como clientes. A empresa organiza seu trabalho em squads (equipes) compostas por desenvolvedores, testadores, líder técnico, supervisor e gerente de produto. Cada squad resolve tarefas (issues) e planeja releases, testes e o cronograma de sprints (iterações) dos projetos de cada cliente.
+
+## Sem utilizar SQL, elabore um mini-projeto conceitual do banco de dados dessa empresa, deixando claro:
+
+### a) As principais entidades envolvidas (clientes, squads, membros, tarefas, projetos, sprints, releases).
+
+Clientes, Projeto, Squad, Sprint, Issue, Membro, Release.
+
+### b) Os principais atributos de cada entidade.
+
+* **Cliente**: ID, nome, CNPJ (como é empresa, melhor isso que CPF) e email
+* **Projeto**: ID, id_cliente (chave estrangeira), nome, descricao, inicio, fim, situacao (em andamento, finalizado, cancelado)
+* **Squad**: ID, nome, id_membro (chave estrangeira)
+* **Sprint**: ID, id_squad (chave estrangeira), numero, descricao, inicio e fim
+* **Issue**: ID, id_projeto (chave estrangeira), id_sprint (chave estrangeira), nome, descricao, situacao (em andamento, finalizado, cancelado)
+* **Membro**: ID, nome, email, funcao
+* **Release**: ID, versao, cricao (data) e publicao (data)
+
+### c) Os relacionamentos entre as entidades (com a cardinalidade, ex.: "um cliente pode ter vários projetos").
+
+* Um cliente tem vários projetos
+* Um projeto só pertence à um cliente
+* Um squad tem vários membros
+* Um membro só faz parte de um squad
+* Um squad tem varios sprints
+* Um sprint só pertence à um squad
+* Um projeto dura varios sprints
+* Um sprint pertence a um projeto
+* Um projeto tem varias issues
+* Uma issue pertence à um projeto
+* Um sprint tem varias issues
+* Uma issue pertence a um sprint
+* Um membro trabalha em várias issues
+* Uma issue pode varios membros
+* Uma release pode ter varios projetos
+* Um projeto faz parte de uma release
+
+### d) Em linguagem natural, as regras de integridade (restrições) que o banco de dados deveria garantir, ex.: "apenas um líder por squad", "toda tarefa precisa estar vinculada a um projeto".
+
+* Toda tarefa tem que pertencer à um projeto
+* Todo projeto tem que pertencer à um cliente
+* Um squad tem que ter exatamente um membro na função "Líder Técnico" e um na função "Supervisor"
+* Um membro só pode estar em um squad
+* Um sprint so pode ter um projeto e pertencer à um squad
+* Uma release só pode ser publicada se todas suas tarefas tiverem sido concluídas
+* As datas de início e fim não podem se contradizer (Uma data de "início" ser depois da de "fim")
+* Não podem haver dois sprints do mesmo squad acontecendo durante um mesmo período
